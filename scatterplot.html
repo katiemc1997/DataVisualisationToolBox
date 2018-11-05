@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-/* http://bl.ocks.org/weiglemc/6185069 */
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,8 +10,10 @@
 <style>
     html, body { height: 100%; padding: 0; margin: 0; }
     div { width: 50%; height: 50%; float: left; }
-    #div1 { background: #777; }
-    #div2 { background: #AAA; }
+    #div1 { background: #2693aa; }
+    #div2 { background: #6daa22; }
+    #div3 { background: #aa147f; }
+    #div4 { background: #aa5c06; }
 
 
     body {
@@ -38,14 +40,15 @@
 
 
 </style>
-<body>
+
 <div id="div1">
 
 </div>
+
 <script src="http://d3js.org/d3.v3.min.js"></script>
 
 <script>
-    var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    var margin = {top: 30, right: 20, bottom: 30, left: 40},
         width = 500 - margin.left - margin.right,
         height = 350 - margin.top - margin.bottom;
 
@@ -116,7 +119,7 @@
             .text("Fitness");
 
         // draw dots
-        svg.selectAll(".dot")
+            svg.selectAll(".dot")
             .data(data)
             .enter().append("circle")
             .attr("class", "dot")
@@ -150,24 +153,21 @@
                 return "translate(0," + i * 20 + ")";
             });
 
-        // draw legend colored rectangles
-        /*legend.append("rect")
-            .attr("x", width - 18)
-            .attr("width", 18)
-            .attr("height", 18)
-            .style("fill", color);
-
-        // draw legend text
-        legend.append("text")
-            .attr("x", width - 24)
-            .attr("y", 9)
-            .attr("dy", ".35em")
-            .style("text-anchor", "end")
-            .text(function(d) { return d;})*/
     });
 </script>
 <div id="div2">
 
 </div>
+
+
+
+<div id="div3">
+
+</div>
+
+<div id="div4">
+
+</div>
+
 </body>
 </html>
