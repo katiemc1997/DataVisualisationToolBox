@@ -3,6 +3,13 @@
     <meta charset="utf-8">
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <style>
+        html, body { height: 100%; padding: 0; margin: 0; }
+        div { width: 50%; height: 50%; float: left; }
+        #div1 { background: #aa1a17; }
+        #div2 { background: #AAA; }
+        #div3 { background: #777; }
+        #div4 { background: #444; }
+
         svg {
             width: 100%;
             height: 100%;
@@ -20,7 +27,7 @@
 
         .axis--x path {
             fill: none;
-            display: yellow;
+//            display: #ff9653;
         }
     </style>
 </head>
@@ -77,8 +84,12 @@
                 .attr("class", "axis")
                 .attr("transform", "translate(0," + height + ")")
                 .call(d3.axisBottom(xRange))
+                .append("text")
                 .style("text-anchor", "middle")
-                .attr("dx", "-.1em");
+                .attr("dx", "80em")
+                .attr("fill", "#000")
+                .attr("text-anchor", "start")
+                .text("Gen");
 
             g.append("g")
                 .attr("class", "axis")
@@ -89,7 +100,7 @@
                 .attr("dy", "0.71em")
                 .attr("fill", "#000")
                 .attr("text-anchor", "start")
-                .text("Market Share, %");
+                .text("Size");
 
             var browser = g.selectAll(".browsers")
                 .data(browsers)
@@ -109,7 +120,7 @@
                 .attr("x", 3)
                 .attr("dy", "0.35em")
                 .style("font", "10px sans-serif")
-                .text(function(d) { return d.id; });
+                //.text(function(d) { return d.id; });
 
         });
 
