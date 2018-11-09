@@ -9,12 +9,6 @@
 
 <style>
     html, body { height: 100%; padding: 0; margin: 0; }
-    div { width: 50%; height: 50%; float: left; }
-    #div1 { background: #2693aa; }
-    #div2 { background: #6daa22; }
-    #div3 { background: #aa147f; }
-    #div4 { background: #aa5c06; }
-
 
     body {
         font: 11px sans-serif;
@@ -41,9 +35,6 @@
 
 </style>
 <body>
-<div id="div1">
-
-</div>
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
 
@@ -69,14 +60,14 @@
         color = d3.scale.category10();
 
     // add the graph canvas to the body of the webpage
-    var svg = d3.select("#div1").append("svg")
+    var svg = d3.select("body").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // add the tooltip area to the webpage
-    var tooltip = d3.select("#div1").append("div")
+    var tooltip = d3.select("body").append("div")
         .attr("class", "tooltip")
         .style("opacity", 0);
 
@@ -119,7 +110,7 @@
             .text("Fitness");
 
         // draw dots
-            svg.selectAll(".dot")
+        svg.selectAll(".dot")
             .data(data)
             .enter().append("circle")
             .attr("class", "dot")
@@ -151,23 +142,10 @@
             .attr("class", "legend")
             .attr("transform", function (d, i) {
                 return "translate(0," + i * 20 + ")";
-            });
+            });})
 
-    });
+
 </script>
-<div id="div2">
-
-</div>
-
-
-
-<div id="div3">
-
-</div>
-
-<div id="div4">
-
-</div>
 
 </body>
 </html>
