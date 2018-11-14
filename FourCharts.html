@@ -187,10 +187,11 @@
             for(Run=1; Run<20; Run++) {
                 total = total + Number(d.AvgFitness);
                 mean = total / 20;
+                console.log(mean);
             }
         });
 
-        console.log(data);
+
 
         // don't want dots overlapping axis, so add in buffer to data domain
 
@@ -219,14 +220,9 @@
             .style("text-anchor", "end")
             .text("AvgFitness");
 
-         var line = d3.line()
-             .xS(function(d) { return xS(d.AvgFitness) })
-             .yS(function(d) { return yS(d.AvgSize)})
-        xS.domain([d3.min(data, xV) - 1, d3.max(data, xV) + 1]);
-        yS.domain([d3.min(data, yV) - 1, d3.max(data, yV) + 1]);
 
     });
-
+/*
     var svg3 = d3.select("body").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -317,7 +313,7 @@
             .attr("class", "legend")
             .attr("transform", function (d, i) {
                 return "translate(0," + i * 20 + ")";
-            });*/
+            });
 
     });
 
@@ -378,7 +374,7 @@
             .style("text-anchor", "end")
             .text("MeanFitness");
 
-        /* draw dots
+         draw dots
         svg4.selectAll(".dot")
             .data(data)
             .enter().append("circle")
@@ -411,10 +407,9 @@
             .attr("class", "legend")
             .attr("transform", function (d, i) {
                 return "translate(0," + i * 20 + ")";
-            });*/
-
-    });});
-
+            });
+*/
+    });
 </script>
 
 
