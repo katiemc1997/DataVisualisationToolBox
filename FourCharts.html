@@ -35,12 +35,19 @@
     {
         border: 1px solid lightgray;
     }
-
+    #div1 {
+        position: fixed;
+        bootom: 0;
+        right:0;
+    }
 
 </style>
 <body>
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
+<svg1 width="1" height="1"></svg1>
+<svg2 width="1" height="1"></svg2>
+<div class="div1" id="div1">Testing</div>
 
 <script>
     var margin = {top: 30, right: 20, bottom: 30, left: 40},
@@ -113,6 +120,14 @@
             .style("text-anchor", "end")
             .text("Fitness");
 
+        svg1.append("text")
+            .attr("x", (width / 2))
+            .attr("y", 0 - (margin.top / 2))
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .style("text-decoration", "underline")
+            .text("Fittest invididual");
+
         // draw dots
         svg1.selectAll(".dot")
             .data(data)
@@ -148,139 +163,62 @@
                 return "translate(0," + i * 20 + ")";
             });
 ///////////////////////////////////////////////////////////
-        var xV = function(d) { return d.AvgSize;}, // data -> value
-            xS = d3.scale.linear().range([0, width]), // value -> display
-            xM = function(d) { return xS(xV(d));}, // data -> display
-            xA = d3.svg.axis().scale(xS).orient("bottom");
 
-        // setup y
-        var yV = function(d) { return d["AvgFitness"];}, // data -> value
-            yS = d3.scale.linear().range([height, 0]), // value -> display
-            yM = function(d) { return yS(yV(d));}, // data -> display
-            yA = d3.svg.axis().scale(yS).orient("left");
 
-// setup fill color
-        var cV = function(d) { return d.AvgFitness;},
-            color1 = d3.scale.category10();
+        var svg3 = d3.select("body").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var svg2 = d3.select("body").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        // add the tooltip area to the webpage
+        var tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
 
-    // add the tooltip area to the webpage
-    var tooltip = d3.select("body").append("svg")
-        .attr("class", "tooltip")
-        .style("opacity", 0);
+        // load data
 
-    // load data
+        d3.csv("hello.csv", function (error, data) {
 
-    d3.csv("hello.csv", function(error, data) {
-        var total = 0;
-        var mean = 0;
-        // change string (from CSV) into number format
-        data.forEach(function (d) {
+            // change string (from CSV) into number format
+            data.forEach(function (d) {
 
-            d.AvgFitness = +d.AvgFitness;
-            d["AvgSize"] = +d["AvgSize"];
-            for(Run=1; Run<20; Run++) {
-                total = total + Number(d.AvgFitness);
-                mean = total / 20;
-                console.log(mean);
-            }
-        });
+                d.Generation = +d.Generation;
+                d["AvgSize"] = +d["AvgSize"];
+
+            });
 
 
 
-        // don't want dots overlapping axis, so add in buffer to data domain
+            // don't want dots overlapping axis, so add in buffer to data domain
+            xScale.domain([d3.min(data, xValue) - 1, d3.max(data, xValue) + 1]);
+            yScale.domain([d3.min(data, yValue) - 1, d3.max(data, yValue) + 1]);
 
+            // x-axis
+            svg3.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis)
+                .append("text")
+                .attr("class", "label")
+                .attr("x", width)
+                .attr("y", -6)
+                .style("text-anchor", "end")
+                .text("BestFitness");
 
-        // x-axis
-        svg2.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis)
-            .append("text")
-            .attr("class", "label")
-            .attr("x", width)
-            .attr("y", -6)
-            .style("text-anchor", "end")
-            .text("AvgSize");
+            // y-axis
+            svg3.append("g")
+                .attr("class", "y axis")
+                .call(yAxis)
+                .append("text")
+                .attr("class", "label")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 6)
+                .attr("dy", ".71em")
+                .style("text-anchor", "end")
+                .text("MeanFitness");
 
-        // y-axis
-        svg2.append("g")
-            .attr("class", "y axis")
-            .call(yAxis)
-            .append("text")
-            .attr("class", "label")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .text("AvgFitness");
-
-
-    });
-/*
-    var svg3 = d3.select("body").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    // add the tooltip area to the webpage
-    var tooltip = d3.select("body").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 0);
-
-    // load data
-
-    d3.csv("hello.csv", function(error, data) {
-        var total = 0;
-        var mean = 0;
-        // change string (from CSV) into number format
-        data.forEach(function (d) {
-
-            d.Generation = +d.Generation;
-            d["AvgSize"] = +d["AvgSize"];
-
-
-            total = total + Number(d.AvgFitness);
-            mean = total/ 20;
-        });
-
-        console.log(mean);
-
-        // don't want dots overlapping axis, so add in buffer to data domain
-        xScale.domain([d3.min(data, xValue) - 1, d3.max(data, xValue) + 1]);
-        yScale.domain([d3.min(data, yValue) - 1, d3.max(data, yValue) + 1]);
-
-        // x-axis
-        svg3.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis)
-            .append("text")
-            .attr("class", "label")
-            .attr("x", width)
-            .attr("y", -6)
-            .style("text-anchor", "end")
-            .text("BestFitness");
-
-        // y-axis
-        svg3.append("g")
-            .attr("class", "y axis")
-            .call(yAxis)
-            .append("text")
-            .attr("class", "label")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .text("MeanFitness");
-
-        /* draw dots
+            /* draw dots
         svg3.selectAll(".dot")
             .data(data)
             .enter().append("circle")
@@ -315,101 +253,123 @@
                 return "translate(0," + i * 20 + ")";
             });
 
-    });
+    });*/
+            //////////////////////////////////////////
 
-    var svg4 = d3.select("body").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            var svg4 = d3.select("body").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    // add the tooltip area to the webpage
-    var tooltip = d3.select("body").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 0);
+            // add the tooltip area to the webpage
+            var tooltip = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
 
-    // load data
+            // load data
 
-    d3.csv("hello.csv", function(error, data) {
-        var total = 0;
-        var mean = 0;
-        // change string (from CSV) into number format
-        data.forEach(function (d) {
+            d3.csv("hello.csv", function (error, data) {
+                // change string (from CSV) into number format
+                data.forEach(function (d) {
 
-            d.Generation = +d.Generation;
-            d["AvgSize"] = +d["AvgSize"];
+                    d.Generation = +d.Generation;
+                    d["AvgSize"] = +d["AvgSize"];
+
+                });
+
+                // don't want dots overlapping axis, so add in buffer to data domain
+                xScale.domain([d3.min(data, xValue) - 1, d3.max(data, xValue) + 1]);
+                yScale.domain([d3.min(data, yValue) - 1, d3.max(data, yValue) + 1]);
+
+                // x-axis
+                svg4.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(xAxis)
+                    .append("text")
+                    .attr("class", "label")
+                    .attr("x", width)
+                    .attr("y", -6)
+                    .style("text-anchor", "end")
+                    .text("BestFitness");
+
+                // y-axis
+                svg4.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis)
+                    .append("text")
+                    .attr("class", "label")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 6)
+                    .attr("dy", ".71em")
+                    .style("text-anchor", "end")
+                    .text("MeanFitness");
+
+                /*draw dots
+                svg4.selectAll(".dot")
+                    .data(data)
+                    .enter().append("circle")
+                    .attr("class", "dot")
+                    .attr("r", 3.5)
+                    .attr("cx", xMap)
+                    .attr("cy", yMap)
+                    .style("fill", function (d) {
+                        return color(cValue(d));
+                    })
+                    .on("mouseover", function (d) {
+                        tooltip.transition()
+                            .duration(200)
+                            .style("opacity", .9);
+                        tooltip.html(d["Generation"] + "<br/> (" + xValue(d)
+                            + ", " + yValue(d) + ")")
+                            .style("left", (d3.event.pageX + 5) + "px")
+                            .style("top", (d3.event.pageY - 28) + "px");
+                    })
+                    .on("mouseout", function (d) {
+                        tooltip.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+                    });*/
+
+                // draw legend
+                var legend = svg4.selectAll(".legend")
+                    .data(color.domain())
+                    .enter().append("g")
+                    .attr("class", "legend")
+                    .attr("transform", function (d, i) {
+                        return "translate(0," + i * 20 + ")";
+                    });
+                ///////////////////////////
+                var svg5 = d3.select("body").append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                d3.csv("hello.csv", function (error, data) {
+                    var total = 0;
+                    var mean = 0;
+                    var testMeanArray = [];
+                    // change string (from CSV) into number format
+                    data.forEach(function (d) {
+
+                        d.Generation = +d.Generation;
+                        d["AvgSize"] = +d["AvgSize"];
 
 
-            total = total + Number(d.AvgFitness);
-            mean = total/ 20;
-        });
+                        total = total + Number(d.AvgFitness);
+                        mean = total / 20;
+                        console.log(mean);
+                        //document.getElementById("de mo").innerHTML = txt.length;
+                        testMeanArray.push(mean);
 
-        console.log(mean);
+                    });
+                    document.getElementById("div1").innerText = testMeanArray;
+                    console.log(testMeanArray);
+                });
 
-        // don't want dots overlapping axis, so add in buffer to data domain
-        xScale.domain([d3.min(data, xValue) - 1, d3.max(data, xValue) + 1]);
-        yScale.domain([d3.min(data, yValue) - 1, d3.max(data, yValue) + 1]);
-
-        // x-axis
-        svg4.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis)
-            .append("text")
-            .attr("class", "label")
-            .attr("x", width)
-            .attr("y", -6)
-            .style("text-anchor", "end")
-            .text("BestFitness");
-
-        // y-axis
-        svg4.append("g")
-            .attr("class", "y axis")
-            .call(yAxis)
-            .append("text")
-            .attr("class", "label")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .text("MeanFitness");
-
-         draw dots
-        svg4.selectAll(".dot")
-            .data(data)
-            .enter().append("circle")
-            .attr("class", "dot")
-            .attr("r", 3.5)
-            .attr("cx", xMap)
-            .attr("cy", yMap)
-            .style("fill", function (d) {
-                return color(cValue(d));
-            })
-            .on("mouseover", function (d) {
-                tooltip.transition()
-                    .duration(200)
-                    .style("opacity", .9);
-                tooltip.html(d["Generation"] + "<br/> (" + xValue(d)
-                    + ", " + yValue(d) + ")")
-                    .style("left", (d3.event.pageX + 5) + "px")
-                    .style("top", (d3.event.pageY - 28) + "px");
-            })
-            .on("mouseout", function (d) {
-                tooltip.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-            });
-
-        // draw legend
-        var legend = svg4.selectAll(".legend")
-            .data(color.domain())
-            .enter().append("g")
-            .attr("class", "legend")
-            .attr("transform", function (d, i) {
-                return "translate(0," + i * 20 + ")";
-            });
-*/
-    });
+            });});});
 </script>
 
 
