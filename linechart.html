@@ -13,6 +13,12 @@
     body {
         font: 11px sans-serif;
     }
+    path {
+        stroke: steelblue;
+        stroke-width: 2;
+        fill: none;
+    }
+
 
     .axis path,
     .axis line {
@@ -47,17 +53,20 @@
     var xValue = function(d) { return d.Generation;}, // data -> value
         xScale = d3.scale.linear().range([0, width]), // value -> display
         xMap = function(d) { return xScale(xValue(d));}, // data -> display
-        xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+        xAxis = d3.svg.axis().scale(xScale).orient("bottom").ticks(10);
 
     // setup y
     var yValue = function(d) { return d["BestFitness"];}, // data -> value
         yScale = d3.scale.linear().range([height, 0]), // value -> display
         yMap = function(d) { return yScale(yValue(d));}, // data -> display
-        yAxis = d3.svg.axis().scale(yScale).orient("left");
+        yAxis = d3.svg.axis().scale(yScale).orient("left").ticks(10);
 
-    // setup fill color
+    var valueline = d3.svg.line()
+        .x(function(d) { return xScale(d.Generation); })
+        .y(function(d) { return yScale(d.BestFitness); });
+    /* setup fill color
     var cValue = function(d) { return d.BestFitness;},
-        color = d3.scale.category10();
+        color = d3.scale.category10();*/
 
     // add the graph canvas to the body of the webpage
     var svg = d3.select("body").append("svg")
@@ -82,8 +91,17 @@
         });
 
         // don't want dots overlapping axis, so add in buffer to data domain
-        xScale.domain([d3.min(data, xValue) - 1, d3.max(data, xValue) + 1]);
-        yScale.domain([d3.min(data, yValue) - 1, d3.max(data, yValue) + 1]);
+       // xScale.domain([d3.min(data, xValue) - 1, d3.max(data, xValue) + 1]);
+        //yScale.domain([d3.min(data, yValue) - 1, d3.max(data, yValue) + 1]);
+
+        xScale.domain(d3.extent(data, function(d) { return d.Generation; }));
+        yScale.domain([0, d3.max(data, function(d) { return d.BestFitness; })]);
+
+
+        // Add the valueline path.
+        svg.append("path")
+            .attr("class", "line")
+            .attr("d", valueline(data));
 
         // x-axis
         svg.append("g")
@@ -109,7 +127,7 @@
             .style("text-anchor", "end")
             .text("Fitness");
 
-        // draw dots
+/*         draw dots
         svg.selectAll(".dot")
             .data(data)
             .enter().append("circle")
@@ -135,14 +153,47 @@
                     .style("opacity", 0);
             });
 
-        // draw legend
+         //draw legend
         var legend = svg.selectAll(".legend")
             .data(color.domain())
             .enter().append("g")
             .attr("class", "legend")
             .attr("transform", function (d, i) {
                 return "translate(0," + i * 20 + ")";
-            });})
+            });*/
+    });
+        var inter = setInterval(function() {
+            updateData();
+        }, 500);
+        function updateData() {
+
+            // Get the data again
+            d3.csv("hello.csv", function(error, data) {
+                data.forEach(function (d) {
+                    d.Generation = +d.Generation;
+                    d["BestFitness"] = +d["BestFitness"];
+                });
+
+                // Scale the range of the data again
+                xScale.domain(d3.extent(data, function(d) { return d.Generation; }));
+                yScale.domain([0, d3.max(data, function(d) { return d.BestFitness; })]);
+
+                // Select the section we want to apply our changes to
+                var svg = d3.select("body").transition();
+
+                // Make the changes
+                svg.select(".line")   // change the line
+                    .duration(750)
+                    .attr("d", valueline(data));
+                svg.select(".x.axis") // change the x axis
+                    .duration(750)
+                    .call(xAxis);
+                svg.select(".y.axis") // change the y axis
+                    .duration(750)
+                    .call(yAxis);
+
+            });}
+
 
 
 </script>
