@@ -30,7 +30,7 @@
         return d;
     }, function(error, data) {
         if (error) throw error;
-        var keys = data.columns.slice(4).slice(0,5);
+        var keys = data.columns.slice(4).slice(0,4);
         x0.domain(data.map(function(d) { return d.Generation; }));
         x1.domain(keys).rangeRound([0, x0.bandwidth()]);
         y.domain([0, d3.max(data, function(d) { return d3.max(keys, function(key) { return d[key]; }); })]).nice();
