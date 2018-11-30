@@ -8,24 +8,24 @@
 
 
 <style>
+
     html, body { height: 100%; padding: 0; margin: 0; }
 
     body {
         font: 11px sans-serif;
     }
     path {
-        stroke: steelblue;
-        stroke-width: 2;
+        stroke: hotpink;
+        stroke-width: 1;
         fill: none;
     }
 
 
-    .axis path,
+   .axis path,
     .axis line {
         fill: none;
         stroke: #000;
     }
-
 
 </style>
 <body>
@@ -34,8 +34,8 @@
 
 <script>
     var margin = {top: 30, right: 20, bottom: 30, left: 40},
-        width = 500 - margin.left - margin.right,
-        height = 350 - margin.top - margin.bottom;
+        width = 400 - margin.left - margin.right,
+        height = 250 - margin.top - margin.bottom;
 
     // setup x
     var xValue = function(d) { return d.Generation;}, // data -> value
@@ -47,14 +47,13 @@
     var yValue = function(d) { return d["BestFitness"];}, // data -> value
         yScale = d3.scale.linear().range([height, 0]), // value -> display
         yMap = function(d) { return yScale(yValue(d));}, // data -> display
-        yAxis = d3.svg.axis().scale(yScale).orient("left").ticks(10);
-
-    var valueline = d3.svg.line()
+        yAxis = d3.svg.axis().scale(yScale).orient("left").ticks(5);
+    var valueline1 = d3.svg.line()
         .x(function(d) { return xScale(d.Generation); })
-        .y(function(d) { return yScale(d.BestFitness); });
+        .y(function(d) { return yScale(d.BestFitness); })
 
     // add the graph canvas to the body of the webpage
-    var svg = d3.select("body").append("svg")
+    var svg2 = d3.select("body").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
@@ -63,24 +62,32 @@
     // load data
     d3.csv("hello.csv", function(error, data) {
 
+
         // change string (from CSV) into number format
         data.forEach(function (d) {
+
             d.Generation = +d.Generation;
             d["BestFitness"] = +d["BestFitness"];
 
         });
+        //for(Run=1; Run<20; Run++) {
 
-        xScale.domain(d3.extent(data, function(d) { return d.Generation; }));
-        yScale.domain([0, d3.max(data, function(d) { return d.BestFitness; })]);
+        xScale.domain(d3.extent(data, function (d) {
+            return d.Generation;
+        }));
+        yScale.domain([0, d3.max(data, function (d) {
+            return d.BestFitness;
+        })]);
 
 
         // Add the valueline path.
-        svg.append("path")
+        svg2.append("path")
+            .data([data])
             .attr("class", "line")
-            .attr("d", valueline(data));
+            .attr("d", valueline1(data));
 
         // x-axis
-        svg.append("g")
+        svg2.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
             .call(xAxis)
@@ -92,7 +99,7 @@
             .text("Generation");
 
         // y-axis
-        svg.append("g")
+        svg2.append("g")
             .attr("class", "y axis")
             .call(yAxis)
             .append("text")
@@ -103,49 +110,43 @@
             .style("text-anchor", "end")
             .text("Fitness");
 
-
-         //draw legend
-        var legend = svg.selectAll(".legend")
-            .data(color.domain())
-            .enter().append("g")
-            .attr("class", "legend")
-            .attr("transform", function (d, i) {
-                return "translate(0," + i * 20 + ")";
-            });
     });
-        var inter = setInterval(function() {
-            updateData();
-        }, 500);
-        function updateData() {
+    var inter = setInterval(function() {
+        updateData();
+    }, 500);
+    function updateData() {
 
-            // Get the data again
-            d3.csv("hello.csv", function(error, data) {
-                data.forEach(function (d) {
-                    d.Generation = +d.Generation;
-                    d["BestFitness"] = +d["BestFitness"];
-                });
+        // Get the data again
+        d3.csv("hello.csv", function(error, data) {
+            data.forEach(function (d) {
+                d.Generation = +d.Generation;
+                d["BestFitness"] = +d["BestFitness"];
+            });
+            //  for(Run=1; Run<20; Run++) {
 
-                // Scale the range of the data again
-                xScale.domain(d3.extent(data, function(d) { return d.Generation; }));
-                yScale.domain([0, d3.max(data, function(d) { return d.BestFitness; })]);
+            // Scale the range of the data again
+            xScale.domain(d3.extent(data, function (d) {
+                return d.Generation;
+            }));
+            yScale.domain([0, d3.max(data, function (d) {
+                return d.BestFitness;
+            })]);
 
-                // Select the section we want to apply our changes to
-                var svg = d3.select("body").transition();
+            // Select the section we want to apply our changes to
+            var svg2 = d3.select("body").transition();
 
-                // Make the changes
-                svg.select(".line")   // change the line
-                    .duration(750)
-                    .attr("d", valueline(data));
-                svg.select(".x.axis") // change the x axis
-                    .duration(750)
-                    .call(xAxis);
-                svg.select(".y.axis") // change the y axis
-                    .duration(750)
-                    .call(yAxis);
+            // Make the changes
+            svg2.select(".line")   // change the line
+                .duration(750)
+                .attr("d", valueline1(data));
+            svg2.select(".x.axis") // change the x axis
+                .duration(750)
+                .call(xAxis);
+            svg2.select(".y.axis") // change the y axis
+                .duration(750)
+                .call(yAxis);
 
-            });}
-
-
+        });}
 
 </script>
 
