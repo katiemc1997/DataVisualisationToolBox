@@ -48,9 +48,14 @@
         yScale = d3.scale.linear().range([height, 0]), // value -> display
         yMap = function(d) { return yScale(yValue(d));}, // data -> display
         yAxis = d3.svg.axis().scale(yScale).orient("left").ticks(5);
-    var valueline1 = d3.svg.line()
-        .x(function(d) { return xScale(d.Generation); })
-        .y(function(d) { return yScale(d.BestFitness); })
+    var valueline1;
+    valueline1 = d3.svg.line()
+        .x(function (d) {
+            return xScale(d.Generation);
+        })
+        .y(function (d) {
+            return yScale(d.BestFitness);
+        });
 
     // add the graph canvas to the body of the webpage
     var svg2 = d3.select("body").append("svg")
