@@ -189,7 +189,7 @@
         .y(function(d1) { return yScale1(d1.AvgSize); })
 
     // add the graph canvas to the body of the webpage
-    var svg1 = d3.select("#div2").append("svg")
+    var svg1 = d3.select("#div4").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
@@ -269,7 +269,7 @@
             })]);
 
             // Select the section we want to apply our changes to
-            var svg1 = d3.select("#div2").transition();
+            var svg1 = d3.select("#div4").transition();
 
             // Make the changes
             svg1.select(".line")   // change the line
