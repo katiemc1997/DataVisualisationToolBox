@@ -78,7 +78,7 @@
         .y(function(d) { return yScale(d.BestFitness); })
 
     // add the graph canvas to the body of the webpage
-    var svg2 = d3.select("#div1").append("svg")
+    var svg = d3.select("#div1").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
@@ -106,13 +106,13 @@
 
 
         // Add the valueline path.
-        svg2.append("path")
+        svg.append("path")
             .data([data])
             .attr("class", "line")
             .attr("d", valueline(data));
 
         // x-axis
-        svg2.append("g")
+        svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
             .call(xAxis)
@@ -124,7 +124,7 @@
             .text("Generation");
 
         // y-axis
-        svg2.append("g")
+        svg.append("g")
             .attr("class", "y axis")
             .call(yAxis)
             .append("text")
@@ -158,16 +158,16 @@
             })]);
 
             // Select the section we want to apply our changes to
-            var svg2 = d3.select("#div1").transition();
+            var svg = d3.select("#div1").transition();
 
             // Make the changes
-            svg2.select(".line")   // change the line
+            svg.select(".line")   // change the line
                 .duration(750)
                 .attr("d", valueline(data));
-            svg2.select(".x.axis") // change the x axis
+            svg.select(".x.axis") // change the x axis
                 .duration(750)
                 .call(xAxis);
-            svg2.select(".y.axis") // change the y axis
+            svg.select(".y.axis") // change the y axis
                 .duration(750)
                 .call(yAxis);
 
@@ -301,7 +301,7 @@
         .y(function(d2) { return yScale2(d2.AvgFitness); })
 
     // add the graph canvas to the body of the webpage
-    var svg3 = d3.select("#div3").append("svg")
+    var svg2 = d3.select("#div3").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
@@ -329,13 +329,13 @@
 
 
         // Add the valueline path.
-        svg3.append("path")
+        svg2.append("path")
             .data([data2])
             .attr("class", "line")
             .attr("d", valueline2(data2));
 
         // x-axis
-        svg3.append("g")
+        svg2.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
             .call(xAxis2)
@@ -347,7 +347,7 @@
             .text("Generation");
 
         // y-axis
-        svg3.append("g")
+        svg2.append("g")
             .attr("class", "y axis")
             .call(yAxis2)
             .append("text")
@@ -381,18 +381,127 @@
             })]);
 
             // Select the section we want to apply our changes to
-            var svg3 = d3.select("#div3").transition();
+            var svg2 = d3.select("#div3").transition();
 
             // Make the changes
-            svg3.select(".line")   // change the line
+            svg2.select(".line")   // change the line
                 .duration(750)
                 .attr("d", valueline2(data2));
-            svg3.select(".x.axis") // change the x axis
+            svg2.select(".x.axis") // change the x axis
                 .duration(750)
                 .call(xAxis2);
-            svg3.select(".y.axis") // change the y axis
+            svg2.select(".y.axis") // change the y axis
                 .duration(750)
                 .call(yAxis2);
+
+        });}
+    var xValue4 = function(d4) { return d4.Generation;}, // data -> value
+        xScale4 = d3.scale.linear().range([0, width]), // value -> display
+        xMap4 = function(d4) { return xScale4(xValue4(d4));}, // data -> display
+        xAxis4 = d3.svg.axis().scale(xScale4).orient("bottom").ticks(10);
+
+    // setup y
+    var yValue4 = function(d4) { return d4["BestSize"];}, // data -> value
+        yScale4 = d3.scale.linear().range([height, 0]), // value -> display
+        yMap4 = function(d4) { return yScale4(yValue4(d4));}, // data -> display
+        yAxis4 = d3.svg.axis().scale(yScale4).orient("left").ticks(5);
+    var valueline4 = d3.svg.line()
+        .x(function(d4) { return xScale4(d4.Generation); })
+        .y(function(d4) { return yScale4(d4.BestSize); })
+
+    // add the graph canvas to the body of the webpage
+    var svg4 = d3.select("#div2").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // load data
+    d3.csv("hello.csv", function(error, data4) {
+
+
+        // change string (from CSV) into number format
+        data4.forEach(function (d4) {
+
+            d4.Generation = +d4.Generation;
+            d4["BestSize"] = +d4["BestSize"];
+
+        });
+        //for(Run=1; Run<20; Run++) {
+
+        xScale4.domain(d3.extent(data4, function (d4) {
+            return d4.Generation;
+        }));
+        yScale4.domain([0, d3.max(data4, function (d4) {
+            return d4.BestSize;
+        })]);
+
+
+        // Add the valueline path.
+        svg4.append("path")
+            .data([data4])
+            .attr("class", "line")
+            .attr("d", valueline4(data4));
+
+        // x-axis
+        svg4.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis4)
+            .append("text")
+            .attr("class", "label")
+            .attr("x", width)
+            .attr("y", -6)
+            .style("text-anchor", "end")
+            .text("Generation");
+
+        // y-axis
+        svg4.append("g")
+            .attr("class", "y axis")
+            .call(yAxis4)
+            .append("text")
+            .attr("class", "label")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("BestSize");
+
+    });
+    var inter = setInterval(function() {
+        updateData4();
+    }, 550);
+    function updateData4() {
+
+        // Get the data again
+        d3.csv("hello.csv", function(error, data4) {
+            data4.forEach(function (d4) {
+                d4.Generation = +d4.Generation;
+                d4["BestSize"] = +d4["BestSize"];
+            });
+            //  for(Run=1; Run<20; Run++) {
+
+            // Scale the range of the data again
+            xScale4.domain(d3.extent(data4, function (d4) {
+                return d4.Generation;
+            }));
+            yScale4.domain([0, d3.max(data4, function (d4) {
+                return d4.BestSize;
+            })]);
+
+            // Select the section we want to apply our changes to
+            var svg4 = d3.select("#div2").transition();
+
+            // Make the changes
+            svg4.select(".line")   // change the line
+                .duration(750)
+                .attr("d", valueline4(data4));
+            svg4.select(".x.axis") // change the x axis
+                .duration(750)
+                .call(xAxis4);
+            svg4.select(".y.axis") // change the y axis
+                .duration(750)
+                .call(yAxis4);
 
         });}
 
