@@ -224,12 +224,25 @@ public class tiny_gp {
 		System.out.println(run + "," + gen + "," + POPSIZE + "," + node_count + "," + (-favgpop) + "," + (-fbestpop)
 				+ "," + avg_len);
 		try {
-			File the_file = new File("/Users/mac/WebstormProjects/DataVisualisationToolBox/hello.csv");
-			PrintWriter the_output = new PrintWriter(new FileWriter(the_file, true));
-			the_output.println(
-					run + "," + gen + "," + POPSIZE + "," + node_count + "," + (-favgpop) + "," + (-fbestpop) + "," + avg_len);
-			the_output.close();
-		} catch (Exception e) {
+                    File the_file = new File("/Users/mac/WebstormProjects/DataVisualisationToolBox/hello.csv");
+                    PrintWriter the_output = new PrintWriter(new FileWriter(the_file, true));
+
+                    if(gen==0){
+                        if(the_file.delete()){
+                            System.out.println("hello.csv File deleted");
+                            File new_file = new File("/Users/mac/WebstormProjects/DataVisualisationToolBox/hello.csv");
+                            PrintWriter the_output2 = new PrintWriter(new FileWriter(new_file, true));
+                            the_output2.print("Run,Generation,PopSize,Nodes,AvgFitness,BestFitness,AvgSize,BestSize\n");
+                            the_output2.close();
+                        }else {
+                            System.out.println("hello.csv doesn't exists");
+                        }
+                    }
+                    the_output.println(
+                            run + "," + gen + "," + POPSIZE + "," + node_count + "," + (-favgpop) + "," + (-fbestpop) + "," + avg_len + "," + best_node_count);
+                    the_output.close();
+
+                } catch (Exception e) {
 			System.err.println(e);
 		}
 
