@@ -73,9 +73,20 @@
         yScale = d3.scale.linear().range([height, 0]), // value -> display
         yMap = function(d) { return yScale(yValue(d));}, // data -> display
         yAxis = d3.svg.axis().scale(yScale).orient("left").ticks(5);
-    var valueline = d3.svg.line()
-        .x(function(d) { return xScale(d.Generation); })
-        .y(function(d) { return yScale(d.BestFitness); })
+
+
+        var valueline = d3.svg.line()
+            .x(function (d) {
+                if(d.Generation !=0) {
+                    return xScale(d.Generation);
+                }
+            })
+            .y(function (d) {
+                if(d.Generation !=0) {
+
+                    return yScale(d.BestFitness);
+                }
+            })
 
     // add the graph canvas to the body of the webpage
     var svg = d3.select("#div1").append("svg")
@@ -95,7 +106,7 @@
             d["BestFitness"] = +d["BestFitness"];
 
         });
-        //for(Run=1; Run<20; Run++) {
+
 
         xScale.domain(d3.extent(data, function (d) {
             return d.Generation;
