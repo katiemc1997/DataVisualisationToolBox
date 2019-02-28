@@ -2,14 +2,29 @@
 
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
-    <title>Fittest Individual of each Generation</title>
+
 </head>
 
-<div id="div1"></div>
-<div id="div2"></div>
-<div id="div3"></div>
-<div id="div4"></div>
+<h1 style="font-size: 20px; font-family:verdana; text-align:center; background-color: hotpink">Evolution of GP</h1>
+
+<div id="div1">
+    <h1 style="font-size: 20px; font-family:verdana; text-align:center">Fittest individual per generation </h1>
+</div>
+
+<div id="div2">
+    <h1 style="font-size: 20px; font-family:verdana; text-align:center">Size of the fittest individual per generation</h1>
+</div>
+
+<div id="div3">
+    <h1 style="font-size: 20px; font-family:verdana; padding: 20px; text-align:center">Average fitness per generation</h1>
+</div>
+
+<div id="div4">
+    <h1 style="font-size: 20px; font-family:verdana; padding: 20px; text-align:center">Average size per generation</h1>
+</div>
+
 <style>
     html, body { height: 100%; padding: 0; margin: 0; }
 
@@ -44,23 +59,33 @@
         border: 1px solid lightgray;
     }
     div { width: 50%; height: 50%; float: left; }
-    #div1 { background: #DDD; }
-    #div2 { background: #DDD; }
-    #div3 { background: #DDD; }
-    #div4 { background: #DDD; }
+    #div1 { background: #FFFFFF; }
+    #div2 { background: #FFFFFF; }
+    #div3 { background: #FFFFFF; }
+    #div4 { background: #FFFFFF; }
 
+    table {
+        border-collapse: collapse;
+        border: 2px black solid;
+        font: 12px sans-serif;
+    }
 
+    td {
+        border: 1px black solid;
+        padding: 5px;
+    }
 
 </style>
-<body>
 
+<body>
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
 
 <script>
+
     var margin = {top: 30, right: 20, bottom: 30, left: 40},
-        width = 400 - margin.left - margin.right,
-        height = 250 - margin.top - margin.bottom;
+        width = 700 - margin.left - margin.right,
+        height = 300 - margin.top - margin.bottom;
 
     // setup x
     var xValue = function(d) { return d.Generation;}, // data -> value
@@ -104,6 +129,7 @@
 
             d.Generation = +d.Generation;
             d["BestFitness"] = +d["BestFitness"];
+            d["Run"] = +d["Run"];
 
         });
 
@@ -157,6 +183,7 @@
             data.forEach(function (d) {
                 d.Generation = +d.Generation;
                 d["BestFitness"] = +d["BestFitness"];
+                d["Run"] = +d["Run"];
             });
             //  for(Run=1; Run<20; Run++) {
 
@@ -183,8 +210,8 @@
                 .call(yAxis);
 
         });}
+//////////////////////////////////////////////////////////////////////////////////
 
-    // // setup x
     var xValue1 = function(d1) { return d1.Generation;}, // data -> value
         xScale1 = d3.scale.linear().range([0, width]), // value -> display
         xMap1 = function(d1) { return xScale1(xValue1(d1));}, // data -> display
@@ -215,6 +242,7 @@
 
             d1.Generation = +d1.Generation;
             d1["AvgSize"] = +d1["AvgSize"];
+            d1["Run"] = +d1["Run"];
 
         });
         //for(Run=1; Run<20; Run++) {
@@ -268,6 +296,7 @@
             data1.forEach(function (d1) {
                 d1.Generation = +d1.Generation;
                 d1["AvgSize"] = +d1["AvgSize"];
+                d1["Run"] = +d1["Run"];
             });
             //  for(Run=1; Run<20; Run++) {
 
@@ -295,8 +324,8 @@
 
         });}
 
+//////////////////////////////////////////////////////////////////////////////////
 
-    // // setup x
     var xValue2 = function(d2) { return d2.Generation;}, // data -> value
         xScale2 = d3.scale.linear().range([0, width]), // value -> display
         xMap2 = function(d2) { return xScale2(xValue2(d2));}, // data -> display
@@ -327,6 +356,7 @@
 
             d2.Generation = +d2.Generation;
             d2["AvgFitness"] = +d2["AvgFitness"];
+            d2["Run"] = +d2["Run"];
 
         });
         //for(Run=1; Run<20; Run++) {
@@ -380,6 +410,7 @@
             data2.forEach(function (d2) {
                 d2.Generation = +d2.Generation;
                 d2["AvgFitness"] = +d2["AvgFitness"];
+                d2["Run"] = +d2["Run"];
             });
             //  for(Run=1; Run<20; Run++) {
 
@@ -406,6 +437,9 @@
                 .call(yAxis2);
 
         });}
+
+//////////////////////////////////////////////////////////////////////////////
+
     var xValue4 = function(d4) { return d4.Generation;}, // data -> value
         xScale4 = d3.scale.linear().range([0, width]), // value -> display
         xMap4 = function(d4) { return xScale4(xValue4(d4));}, // data -> display
@@ -436,6 +470,7 @@
 
             d4.Generation = +d4.Generation;
             d4["BestSize"] = +d4["BestSize"];
+            d4["Run"] = +d4["Run"];
 
         });
         //for(Run=1; Run<20; Run++) {
@@ -489,6 +524,7 @@
             data4.forEach(function (d4) {
                 d4.Generation = +d4.Generation;
                 d4["BestSize"] = +d4["BestSize"];
+                d4["Run"] = +d4["Run"];
             });
             //  for(Run=1; Run<20; Run++) {
 
@@ -516,6 +552,21 @@
 
         });}
 
+    d3.text("hello.csv", function(data5) {
+        var parsedCSV = d3.csv.parseRows(data5);
+
+        var container = d3.select("body")
+            .append("table")
+
+            .selectAll("tr")
+            .data(parsedCSV).enter()
+            .append("tr")
+
+            .selectAll("td")
+            .data(function(d5) { return d5; }).enter()
+            .append("td")
+            .text(function(d5) { return d5; });
+    });
 
 </script>
 
